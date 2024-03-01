@@ -1,10 +1,10 @@
 package productimporter.suppliers.wayneenterprises;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import productimporter.Product;
 import productimporter.ProductImporter;
+
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public final class WayneEnterprisesProductImporter implements ProductImporter {
 
@@ -16,9 +16,9 @@ public final class WayneEnterprisesProductImporter implements ProductImporter {
 
     @Override
     public Iterable<Product> fetchProducts() {
-        ArrayList<WayneEnterprisesProduct> products = new ArrayList<WayneEnterprisesProduct>();
-        dataSource.fetchProducts().forEach(products::add);
-        return Arrays.asList(new Product[products.size()]);
+        return StreamSupport.stream(dataSource.fetchProducts().spliterator(), false)
+                .map(p -> new Product("WAYNE", null, null, null))
+                .collect(Collectors.toList());
     }
 
 }
