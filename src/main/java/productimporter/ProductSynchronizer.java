@@ -1,5 +1,7 @@
 package productimporter;
 
+import java.util.stream.StreamSupport;
+
 public final class ProductSynchronizer {
 
     private final ProductImporter importer;
@@ -19,8 +21,8 @@ public final class ProductSynchronizer {
      * 3. 검증에 통과한 상품은 inventory 에 저장한다. (출력)
      * */
     public void run() {
-        for (Product product : importer.fetchProducts()) {
-            inventory.upsertProduct(product);
-        }
+        StreamSupport.stream(importer.fetchProducts().spliterator(), false)
+                .filter(validator::isValid)
+                .forEach(inventory::upsertProduct);
     }
 }
